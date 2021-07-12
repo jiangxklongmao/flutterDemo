@@ -32,7 +32,7 @@ public class FlutterPageActivity extends FlutterActivity {
 
         FlutterChannel.getInstance().registerChannel(pageId, getFlutterEngine());
 
-        Map<String, String> stringMap = new HashMap<>();
+        Map<String, String> stringMap = new HashMap<>(1);
         stringMap.put("pageId", pageId);
         stringMap.put("url", url);
         FlutterChannel.getInstance().getChannelByPageId(pageId).invokeMethod("init", stringMap, new MethodChannel.Result() {
