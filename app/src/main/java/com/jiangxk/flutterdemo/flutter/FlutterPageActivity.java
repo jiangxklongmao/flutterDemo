@@ -1,10 +1,15 @@
 package com.jiangxk.flutterdemo.flutter;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.plugin.common.MethodChannel;
 
 /**
  * author : jiangxk
@@ -16,12 +21,35 @@ import io.flutter.embedding.android.FlutterActivity;
  * @author jiangxk
  */
 public class FlutterPageActivity extends FlutterActivity {
+    private static final String TAG = "FlutterPageActivity";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String url = "";
-        FlutterEngineManger.getInstance().putEngine(url, getFlutterEngine());
+        String pageId = getIntent().getStringExtra("pageId");
+        String url = getIntent().getStringExtra("url");
 
+        FlutterChannel.getInstance().registerChannel(pageId, getFlutterEngine());
+
+        Map<String, String> stringMap = new HashMap<>();
+        stringMap.put("pageId", pageId);
+        stringMap.put("url", url);
+        FlutterChannel.getInstance().getChannelByPageId(pageId).invokeMethod("init", stringMap, new MethodChannel.Result() {
+            @Override
+            public void success(@Nullable Object result) {
+                Log.i(TAG, "success: " + result.toString());
+            }
+
+            @Override
+            public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
+                Log.i(TAG, "error: " + errorMessage);
+            }
+
+            @Override
+            public void notImplemented() {
+                Log.i(TAG, "notImplemented: ");
+            }
+        });
     }
 }
