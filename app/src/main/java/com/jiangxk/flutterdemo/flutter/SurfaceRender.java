@@ -3,6 +3,7 @@ package com.jiangxk.flutterdemo.flutter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -68,7 +69,7 @@ class SurfaceRender {
         try {
             canvas = mSurface.lockCanvas(null);
             if (mBitmap != null) {
-                canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+                canvas.drawBitmap(mBitmap, (mBitmap.getWidth() - 100) / 2, (mBitmap.getHeight() - 100) / 2, mPaint);
             }
         } catch (Exception e) {
             Log.e(TAG, "innerDrawTexture: ", e);
@@ -77,7 +78,6 @@ class SurfaceRender {
                 mSurface.unlockCanvasAndPost(canvas);
             }
         }
-
     }
 
 }

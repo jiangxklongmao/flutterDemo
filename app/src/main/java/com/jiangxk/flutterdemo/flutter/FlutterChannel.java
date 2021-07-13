@@ -31,6 +31,7 @@ import io.flutter.view.TextureRegistry;
  * version: 1.0
  */
 class FlutterChannel {
+    private static final String TAG = "FlutterChannel";
     private Map<String, MethodChannel> mChannelMap = new HashMap<>();
 
     private FlutterChannel() {
@@ -53,12 +54,14 @@ class FlutterChannel {
         engine.addEngineLifecycleListener(new FlutterEngine.EngineLifecycleListener() {
             @Override
             public void onPreEngineRestart() {
-
+                Log.i(TAG, "onPreEngineRestart: ");
             }
 
             @Override
             public void onEngineWillDestroy() {
+                Log.i(TAG, "onEngineWillDestroy: ");
                 mChannelMap.remove(pageId);
+                FlutterEngineManger.getInstance().removeEngine(pageId);
             }
         });
 
@@ -85,19 +88,22 @@ class FlutterChannel {
             switch (methodName) {
                 case "getTexture":
                     String url = call.argument("url");
+                    String pageId = call.argument("pageId");
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "onMethodCall: " + "url isEmpty");
                         result.error("1002", "url isEmpty", "");
                         return;
                     }
 
-                    FlutterEngine engine = FlutterEngineManger.getInstance().getFlutterEngine(url);
+                    FlutterEngine engine = FlutterEngineManger.getInstance().getFlutterEngine(pageId);
                     if (engine == null) {
                         result.error("1003", "FlutterEngine == null", "");
                         return;
                     }
 
                     TextureRegistry.SurfaceTextureEntry entry = engine.getRenderer().createSurfaceTexture();
+
+                    result.success(entry.id());
 
                     Glide.with(DemoApplication.sContext)
                             .asBitmap()
@@ -144,6 +150,7 @@ class FlutterChannel {
 
                                 @Override
                                 public void getSize(@NonNull SizeReadyCallback cb) {
+                                    cb.onSizeReady(100, 100);
                                     Log.i(TAG, "getSize: ");
                                 }
 

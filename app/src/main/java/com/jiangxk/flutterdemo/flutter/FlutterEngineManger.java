@@ -1,9 +1,16 @@
 package com.jiangxk.flutterdemo.flutter;
 
+import android.util.Log;
+
+import com.jiangxk.flutterdemo.DemoApplication;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.FlutterEngineGroup;
+import io.flutter.embedding.engine.dart.DartExecutor;
 
 /**
  * author : jiangxk
@@ -12,11 +19,15 @@ import io.flutter.embedding.engine.FlutterEngine;
  * desc   :
  * version: 1.0
  */
-class FlutterEngineManger {
+public class FlutterEngineManger {
+    private static final String TAG = "FlutterEngineManger";
+
+    private FlutterEngineGroup engineGroup;
 
     private Map<String, FlutterEngine> mEngineMap = new HashMap<>();
 
     private FlutterEngineManger() {
+        engineGroup = new FlutterEngineGroup(DemoApplication.sContext);
     }
 
     public static FlutterEngineManger getInstance() {
@@ -27,12 +38,22 @@ class FlutterEngineManger {
         private static FlutterEngineManger instance = new FlutterEngineManger();
     }
 
-    public FlutterEngine getFlutterEngine(String url) {
-        return mEngineMap.get(url);
+    public FlutterEngine getFlutterEngine() {
+        DartExecutor.DartEntrypoint dartEntrypoint = new DartExecutor.DartEntrypoint(FlutterInjector.instance().flutterLoader().findAppBundlePath(), "main");
+        FlutterEngine flutterEngine = engineGroup.createAndRunEngine(DemoApplication.sContext, dartEntrypoint);
+        return flutterEngine;
     }
 
-    public void putEngine(String url, FlutterEngine engine) {
-
-        mEngineMap.put(url, engine);
+    public FlutterEngine getFlutterEngine(String pageId) {
+        return mEngineMap.get(pageId);
     }
+
+    public void putEngine(String pageId, FlutterEngine engine) {
+        mEngineMap.put(pageId, engine);
+    }
+
+    public void removeEngine(String pageId) {
+        mEngineMap.remove(pageId);
+    }
+
 }

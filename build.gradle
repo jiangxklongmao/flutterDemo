@@ -5,7 +5,7 @@ buildscript {
         google()
         jcenter()
         maven {
-            url '/Users/jiangxk/Documents/Project/GitHub/Workspace/Flutter/flutter_module_demo/flutter_module/build/host/outputs/repo'
+            url '/Users/xingke/Documents/Project/GitHub/Flutter/flutter_module/flutter_module/build/host/outputs/repo'
         }
         maven {
             url "$storageUrl/download.flutter.io"
@@ -26,7 +26,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url '/Users/jiangxk/Documents/Project/GitHub/Workspace/Flutter/flutter_module_demo/flutter_module/build/host/outputs/repo'
+            url '/Users/xingke/Documents/Project/GitHub/Flutter/flutter_module/flutter_module/build/host/outputs/repo'
         }
         maven {
             url "$storageUrl/download.flutter.io"
