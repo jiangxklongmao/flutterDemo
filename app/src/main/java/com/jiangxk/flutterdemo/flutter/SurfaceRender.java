@@ -71,6 +71,7 @@ class SurfaceRender {
     }
 
     private void innerDrawTexture() {
+        mSurface.
         Canvas canvas = null;
         try {
             canvas = mSurface.lockCanvas(null);

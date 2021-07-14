@@ -1,5 +1,6 @@
 package com.jiangxk.flutterdemo.flutter;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.jiangxk.flutterdemo.DemoApplication;
+import com.jiangxk.flutterdemo.MainActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,97 +89,111 @@ class FlutterChannel {
 
             switch (methodName) {
                 case "getTexture":
-                    String url = call.argument("url");
-                    String pageId = call.argument("pageId");
-                    if (TextUtils.isEmpty(url)) {
-                        Log.e(TAG, "onMethodCall: " + "url isEmpty");
-                        result.error("1002", "url isEmpty", "");
-                        return;
-                    }
+                    getTexture(call, result);
+                    break;
+                case "openFlutterPage":
+                    String pageIdString = call.argument("pageId");
+                    int pageId = Integer.parseInt(pageIdString);
 
-                    FlutterEngine engine = FlutterEngineManger.getInstance().getFlutterEngine(pageId);
-                    if (engine == null) {
-                        result.error("1003", "FlutterEngine == null", "");
-                        return;
-                    }
+                    Intent intent = new Intent(DemoApplication.sContext, FlutterPageActivity.class);
+                    intent.putExtra("pageId", ++pageId + "");
+                    intent.putExtra("url", "https://img2.baidu.com/it/u=463599133,3602275510&fm=26&fmt=auto&gp=0.jpg");
+                    DemoApplication.sContext.startActivity(intent);
 
-                    TextureRegistry.SurfaceTextureEntry entry = engine.getRenderer().createSurfaceTexture();
-
-                    result.success(entry.id());
-
-//                    int size = (int) (DemoApplication.sContext.getResources().getDisplayMetrics().density * 100);
-                    int size = 100;
-
-                    Glide.with(DemoApplication.sContext)
-                            .asBitmap()
-                            .load(url)
-                            .into(new Target<Bitmap>() {
-                                @Override
-                                public void onStart() {
-                                    Log.i(TAG, "onStart: ");
-                                }
-
-                                @Override
-                                public void onStop() {
-                                    Log.i(TAG, "onStop: ");
-                                }
-
-                                @Override
-                                public void onDestroy() {
-                                    Log.i(TAG, "onDestroy: ");
-                                }
-
-                                @Override
-                                public void onLoadStarted(@Nullable Drawable placeholder) {
-                                    Log.i(TAG, "onLoadStarted: ");
-                                }
-
-                                @Override
-                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                    Log.i(TAG, "onLoadFailed: ");
-                                }
-
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    Log.i(TAG, "onResourceReady: ");
-
-                                    SurfaceRender surfaceRender = new SurfaceRender(entry, resource, size);
-                                    surfaceRender.drawTexture();
-
-                                }
-
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                    Log.i(TAG, "onLoadCleared: ");
-                                }
-
-                                @Override
-                                public void getSize(@NonNull SizeReadyCallback cb) {
-                                    cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-//                                    cb.onSizeReady(size, size);
-                                    Log.i(TAG, "getSize: ");
-                                }
-
-                                @Override
-                                public void removeCallback(@NonNull SizeReadyCallback cb) {
-
-                                }
-
-                                @Override
-                                public void setRequest(@Nullable Request request) {
-
-                                }
-
-                                @Nullable
-                                @Override
-                                public Request getRequest() {
-                                    return null;
-                                }
-                            });
                     break;
                 default:
                     break;
             }
+        }
+
+        private void getTexture(MethodCall call, MethodChannel.Result result) {
+            String url = call.argument("url");
+            String pageId = call.argument("pageId");
+            if (TextUtils.isEmpty(url)) {
+                Log.e(TAG, "onMethodCall: " + "url isEmpty");
+                result.error("1002", "url isEmpty", "");
+                return;
+            }
+
+            FlutterEngine engine = FlutterEngineManger.getInstance().getFlutterEngine(pageId);
+            if (engine == null) {
+                result.error("1003", "FlutterEngine == null", "");
+                return;
+            }
+
+            TextureRegistry.SurfaceTextureEntry entry = engine.getRenderer().createSurfaceTexture();
+
+            result.success(entry.id());
+
+//                    int size = (int) (DemoApplication.sContext.getResources().getDisplayMetrics().density * 100);
+            int size = 100;
+
+            Glide.with(DemoApplication.sContext)
+                    .asBitmap()
+                    .load(url)
+                    .into(new Target<Bitmap>() {
+                        @Override
+                        public void onStart() {
+                            Log.i(TAG, "onStart: ");
+                        }
+
+                        @Override
+                        public void onStop() {
+                            Log.i(TAG, "onStop: ");
+                        }
+
+                        @Override
+                        public void onDestroy() {
+                            Log.i(TAG, "onDestroy: ");
+                        }
+
+                        @Override
+                        public void onLoadStarted(@Nullable Drawable placeholder) {
+                            Log.i(TAG, "onLoadStarted: ");
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            Log.i(TAG, "onLoadFailed: ");
+                        }
+
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            Log.i(TAG, "onResourceReady: ");
+
+                            SurfaceRender surfaceRender = new SurfaceRender(entry, resource, size);
+                            surfaceRender.drawTexture();
+
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            Log.i(TAG, "onLoadCleared: ");
+                        }
+
+                        @Override
+                        public void getSize(@NonNull SizeReadyCallback cb) {
+                            cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+//                                    cb.onSizeReady(size, size);
+                            Log.i(TAG, "getSize: ");
+                        }
+
+                        @Override
+                        public void removeCallback(@NonNull SizeReadyCallback cb) {
+
+                        }
+
+                        @Override
+                        public void setRequest(@Nullable Request request) {
+
+                        }
+
+                        @Nullable
+                        @Override
+                        public Request getRequest() {
+                            return null;
+                        }
+                    });
         }
 
     }

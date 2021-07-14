@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.textView).setOnClickListener(v -> {
             openFlutterPage();
-            openFlutterPage();
         });
     }
 
