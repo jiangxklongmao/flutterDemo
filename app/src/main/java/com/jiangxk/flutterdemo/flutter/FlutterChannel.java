@@ -105,6 +105,9 @@ class FlutterChannel {
 
                     result.success(entry.id());
 
+//                    int size = (int) (DemoApplication.sContext.getResources().getDisplayMetrics().density * 100);
+                    int size = 100;
+
                     Glide.with(DemoApplication.sContext)
                             .asBitmap()
                             .load(url)
@@ -138,7 +141,7 @@ class FlutterChannel {
                                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                     Log.i(TAG, "onResourceReady: ");
 
-                                    SurfaceRender surfaceRender = new SurfaceRender(entry, resource);
+                                    SurfaceRender surfaceRender = new SurfaceRender(entry, resource, size);
                                     surfaceRender.drawTexture();
 
                                 }
@@ -150,7 +153,8 @@ class FlutterChannel {
 
                                 @Override
                                 public void getSize(@NonNull SizeReadyCallback cb) {
-                                    cb.onSizeReady(100, 100);
+                                    cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+//                                    cb.onSizeReady(size, size);
                                     Log.i(TAG, "getSize: ");
                                 }
 

@@ -30,17 +30,23 @@ class SurfaceRender {
     private Surface mSurface;
     private Bitmap mBitmap;
     private Paint mPaint;
+    private Rect clip, src, dst;
 
     private HandlerThread mHandlerThread;
     private Handler mHandler;
 
 
-    public SurfaceRender(TextureRegistry.SurfaceTextureEntry entry, Bitmap bitmap) {
+    public SurfaceRender(TextureRegistry.SurfaceTextureEntry entry, Bitmap bitmap, int size) {
         mEntry = entry;
         mTexture = entry.surfaceTexture();
         mSurface = new Surface(mTexture);
         mBitmap = bitmap;
         mPaint = new Paint();
+        int left = (bitmap.getWidth() - size) / 2;
+        int top = (bitmap.getHeight() - size) / 2;
+        src = new Rect(left, top, left + size, top + size);
+        dst = new Rect(0, 0, size, size);
+        clip = new Rect(0, 0, size, size);
 
         mHandlerThread = new HandlerThread("SurfaceRender");
         mHandlerThread.start();
@@ -69,7 +75,8 @@ class SurfaceRender {
         try {
             canvas = mSurface.lockCanvas(null);
             if (mBitmap != null) {
-                canvas.drawBitmap(mBitmap, (mBitmap.getWidth() - 100) / 2, (mBitmap.getHeight() - 100) / 2, mPaint);
+                canvas.clipRect(clip);
+                canvas.drawBitmap(mBitmap, src, dst, mPaint);
             }
         } catch (Exception e) {
             Log.e(TAG, "innerDrawTexture: ", e);
