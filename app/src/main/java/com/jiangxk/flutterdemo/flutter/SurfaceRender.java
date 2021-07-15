@@ -38,7 +38,7 @@ class SurfaceRender {
 
     public SurfaceRender(TextureRegistry.SurfaceTextureEntry entry, Bitmap bitmap, int size) {
         mEntry = entry;
-        mTexture = entry.surfaceTexture();
+        mTexture = mEntry.surfaceTexture();
         mSurface = new Surface(mTexture);
         mBitmap = bitmap;
         mPaint = new Paint();
@@ -71,7 +71,6 @@ class SurfaceRender {
     }
 
     private void innerDrawTexture() {
-        mSurface.
         Canvas canvas = null;
         try {
             canvas = mSurface.lockCanvas(null);
