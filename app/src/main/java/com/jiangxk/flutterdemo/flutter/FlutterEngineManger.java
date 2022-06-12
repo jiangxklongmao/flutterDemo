@@ -45,7 +45,7 @@ public class FlutterEngineManger {
         //Use Custom  dartEntrypointLibrary  path     failure
         DartExecutor.DartEntrypoint dartEntrypoint = new DartExecutor.DartEntrypoint(
                 FlutterInjector.instance().flutterLoader().findAppBundlePath(),
-                "main.dart", "main");
+                "others.dart", "others");
 
         FlutterEngine flutterEngine = engineGroup.createAndRunEngine(DemoApplication.sContext, dartEntrypoint);
         return flutterEngine;
