@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void openFlutterPage() {
         Intent intent = new Intent(MainActivity.this, FlutterPageActivity.class);
-        intent.putExtra("pageId", pageId + "");
-        pageId++;
-        intent.putExtra("url", "https://img2.baidu.com/it/u=463599133,3602275510&fm=26&fmt=auto&gp=0.jpg");
         startActivity(intent);
     }
 }

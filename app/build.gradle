@@ -31,7 +31,7 @@ android {
 repositories {
     String storageUrl = System.env.FLUTTER_STORAGE_BASE_URL ?: "https://storage.googleapis.com"
     maven {
-        url '/Users/jiangxk/Documents/Project/GitHub/Workspace/Flutter/flutter_module_demo/flutter_module/build/host/outputs/repo'
+        url '/Users/xingke/Documents/Project/GitHub/Flutter/flutter_module/flutter_module/build/host/outputs/repo'
     }
     maven {
         url "$storageUrl/download.flutter.io"
@@ -47,10 +47,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    compile 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
-    implementation 'com.jiangxk.flutter_module:flutter_debug:1.0'
-//    implementation 'com.jiangxk.flutter_module:flutter_release:1.0'
+//    implementation 'com.jiangxk.flutter_module:flutter_debug:1.0'
+    implementation 'com.jiangxk.flutter_module:flutter_release:1.0'
 
 }

@@ -34,12 +34,7 @@ import io.flutter.plugin.common.MethodChannel;
 public class FlutterPageActivity extends Activity {
     private static final String TAG = "FlutterPageActivity";
 
-    private String pageId;
-    private String url;
-
-    Map<String, String> stringMap = new HashMap<>(1);
     FrameLayout root;
-
     FlutterEngine flutterEngine;
     FlutterView flutterView;
 
@@ -60,37 +55,11 @@ public class FlutterPageActivity extends Activity {
         flutterView = new FlutterView(this, flutterSurfaceView);
         flutterView.attachToFlutterEngine(flutterEngine);
         root.addView(flutterView, new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-
-        pageId = getIntent().getStringExtra("pageId");
-        url = getIntent().getStringExtra("url");
-
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        FlutterEngineManger.getInstance().putEngine(pageId, flutterEngine);
-        FlutterChannel.getInstance().registerChannel(pageId, flutterEngine);
-
-        stringMap.put("pageId", pageId);
-        stringMap.put("url", url);
-        FlutterChannel.getInstance().getChannelByPageId(pageId).invokeMethod("init", stringMap, new MethodChannel.Result() {
-            @Override
-            public void success(@Nullable Object result) {
-                Log.i(TAG, "success: " + result);
-            }
-
-            @Override
-            public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
-                Log.i(TAG, "error: " + errorMessage);
-            }
-
-            @Override
-            public void notImplemented() {
-                Log.i(TAG, "notImplemented: ");
-            }
-        });
     }
 
     @Override

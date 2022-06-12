@@ -24,8 +24,6 @@ public class FlutterEngineManger {
 
     private FlutterEngineGroup engineGroup;
 
-    private Map<String, FlutterEngine> mEngineMap = new HashMap<>();
-
     private FlutterEngineManger() {
         engineGroup = new FlutterEngineGroup(DemoApplication.sContext);
     }
@@ -39,21 +37,18 @@ public class FlutterEngineManger {
     }
 
     public FlutterEngine getFlutterEngine() {
-        DartExecutor.DartEntrypoint dartEntrypoint = new DartExecutor.DartEntrypoint(FlutterInjector.instance().flutterLoader().findAppBundlePath(), "main");
+//        //Use default mode     success
+//        DartExecutor.DartEntrypoint dartEntrypoint = new DartExecutor.DartEntrypoint(
+//                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+//                "main");
+
+        //Use Custom  dartEntrypointLibrary  path     failure
+        DartExecutor.DartEntrypoint dartEntrypoint = new DartExecutor.DartEntrypoint(
+                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+                "main.dart", "main");
+
         FlutterEngine flutterEngine = engineGroup.createAndRunEngine(DemoApplication.sContext, dartEntrypoint);
         return flutterEngine;
-    }
-
-    public FlutterEngine getFlutterEngine(String pageId) {
-        return mEngineMap.get(pageId);
-    }
-
-    public void putEngine(String pageId, FlutterEngine engine) {
-        mEngineMap.put(pageId, engine);
-    }
-
-    public void removeEngine(String pageId) {
-        mEngineMap.remove(pageId);
     }
 
 }
